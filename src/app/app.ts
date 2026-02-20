@@ -41,7 +41,11 @@ import { CountMinSketch } from './models/cmsk.model';
             <div class="stat-card" *ngFor="let top of topProducts; let i = index">
               <div class="stat-rank">#{{ i + 1 }}</div>
               <div class="stat-content">
-                <span class="stat-symbol">{{ top.product.symbol }}</span>
+                <div class="stat-header">
+                  <span class="stat-symbol">{{ top.product.symbol }}</span>
+                  <span class="stat-name">{{ top.product.name }}</span>
+                </div>
+                <span class="stat-isin">{{ top.product.isin }}</span>
                 <span class="stat-value">{{ top.count }} clics</span>
               </div>
             </div>
@@ -58,6 +62,14 @@ import { CountMinSketch } from './models/cmsk.model';
           </div>
 
           <div class="cms-grid">
+            <div class="cms-row header-row">
+              <div class="row-label">Col.</div>
+              <div class="cells">
+                <div *ngFor="let c of [].constructor(cmsCols); let i = index" class="column-header">
+                  {{ i }}
+                </div>
+              </div>
+            </div>
             <div class="cms-row" *ngFor="let row of cmsTable; let r = index">
               <div class="row-label">Hash {{ r + 1 }}</div>
               <div class="cells">
@@ -254,6 +266,24 @@ import { CountMinSketch } from './models/cmsk.model';
     .stat-content {
       display: flex;
       flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .stat-isin {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: monospace;
     }
 
     .stat-symbol {
@@ -302,6 +332,20 @@ import { CountMinSketch } from './models/cmsk.model';
       font-weight: 600;
       color: var(--text-dim);
       text-transform: uppercase;
+      text-align: right;
+    }
+
+    .column-header {
+      width: 50px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      opacity: 0.8;
+    }
+
+    .header-row {
+      margin-bottom: 0.25rem;
     }
 
     .cells {
@@ -391,7 +435,7 @@ export class App implements OnInit {
   filteredProducts: Product[] = CAC40_PRODUCTS;
 
   cmsRows = 4;
-  cmsCols = 10;
+  cmsCols = 12;
   cms = new CountMinSketch(this.cmsRows, this.cmsCols);
   cmsTable: number[][] = [];
 
