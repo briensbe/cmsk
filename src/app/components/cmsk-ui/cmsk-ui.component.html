@@ -1,0 +1,93 @@
+<div class="app-container">
+  <aside class="sidebar">
+    <div class="logo">
+      <h1>CMS<span>k</span></h1>
+      <p>Count-Min Sketch Visualizer</p>
+    </div>
+
+    <div class="search-box">
+      <input type="text" placeholder="Rechercher un produit..." (input)="filterProducts($event)" />
+    </div>
+
+    <div class="product-list">
+      <div
+        *ngFor="let product of filteredProducts"
+        class="product-item"
+        (click)="incrementProduct(product)"
+        [class.active]="lastClickedProduct?.isin === product.isin"
+      >
+        <div class="product-info">
+          <span class="product-symbol">{{ product.symbol }}</span>
+          <span class="product-name">{{ product.name }}</span>
+        </div>
+        <span class="product-isin">{{ product.isin }}</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <div class="stats-container">
+        <div class="stat-card" *ngFor="let top of topProducts; let i = index">
+          <div class="stat-rank">#{{ i + 1 }}</div>
+          <div class="stat-content">
+            <div class="stat-header">
+              <span class="stat-symbol">{{ top.product.symbol }}</span>
+              <span class="stat-name">{{ top.product.name }}</span>
+            </div>
+            <span class="stat-isin">{{ top.product.isin }}</span>
+            <span class="stat-value">{{ top.count }} clics</span>
+          </div>
+        </div>
+        <div class="stat-card empty" *ngIf="topProducts.length === 0">
+          Cliquez sur des produits pour voir le Top 3
+        </div>
+      </div>
+    </header>
+
+    <section class="visualizer">
+      <div class="cms-header">
+        <h2>Count-Min Sketch Table ({{ cmsRows }}x{{ cmsCols }})</h2>
+        <p>Visualisation des hash et incréments en temps réel</p>
+      </div>
+
+      <div class="cms-grid">
+        <div class="cms-row header-row">
+          <div class="row-label">Col.</div>
+          <div class="cells">
+            <div *ngFor="let c of [].constructor(cmsCols); let i = index" class="column-header">
+              {{ i }}
+            </div>
+          </div>
+        </div>
+        <div class="cms-row" *ngFor="let row of cmsTable; let r = index">
+          <div class="row-label">Hash {{ r + 1 }}</div>
+          <div class="cells">
+            <div
+              *ngFor="let cell of row; let c = index"
+              class="cms-cell"
+              [class.highlight]="isHighlighted(r, c)"
+              [class.active]="isActive(r, c)"
+            >
+              <span class="cell-value">{{ cell }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend" *ngIf="lastClickedProduct">
+        <div class="info-bubble">
+          Dernière action: <strong>{{ lastClickedProduct.name }}</strong> a été haché vers les
+          colonnes
+          <span class="highlight-cols">
+            {{ lastHitsDisplay }}
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>CMSk | Visualisation de l'algorithme Count-Min Sketch avec le CAC40</p>
+    </footer>
+  </main>
+</div>
