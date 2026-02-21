@@ -22,6 +22,7 @@ export class CmskUiComponent implements OnInit {
 
     realCounts = new Map<string, number>();
     topProducts: { product: Product, count: number }[] = [];
+    topEstimatedProducts: { product: Product, score: number }[] = [];
 
     lastClickedProduct: Product | null = null;
     lastHits: { row: number, col: number }[] = [];
@@ -53,6 +54,7 @@ export class CmskUiComponent implements OnInit {
         this.realCounts.set(product.isin, currentCount);
 
         this.updateTop3();
+        this.updateEstimatedTop3(product);
         this.refreshTable();
 
         // Remove active state after animation
@@ -72,6 +74,31 @@ export class CmskUiComponent implements OnInit {
                 count
             }));
         this.topProducts = sorted;
+    }
+
+    updateEstimatedTop3(currentProduct: Product) {
+        const score = this.cms.estimate(currentProduct.isin);
+
+        // Check if the product is already in the top estimated list
+        const index = this.topEstimatedProducts.findIndex(p => p.product.isin === currentProduct.isin);
+
+        if (index !== -1) {
+            // Update existing entry
+            this.topEstimatedProducts[index].score = score;
+        } else if (this.topEstimatedProducts.length < 3) {
+            // Add if there's room
+            this.topEstimatedProducts.push({ product: currentProduct, score });
+        } else {
+            // Check if it should replace the lowest score in top 3
+            const minScoreItem = [...this.topEstimatedProducts].sort((a, b) => a.score - b.score)[0];
+            if (score > minScoreItem.score) {
+                const minIndex = this.topEstimatedProducts.indexOf(minScoreItem);
+                this.topEstimatedProducts[minIndex] = { product: currentProduct, score };
+            }
+        }
+
+        // Sort the list
+        this.topEstimatedProducts.sort((a, b) => b.score - a.score);
     }
 
     refreshTable() {

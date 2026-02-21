@@ -84,12 +84,12 @@
 }
 
 .product-item {
-  padding: 1rem;
-  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
   border: 1px solid transparent;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .product-item:hover {
@@ -101,28 +101,27 @@
   border-color: rgba(99, 102, 241, 0.3);
 }
 
-.product-info {
+.product-info-compact {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.product-symbol {
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.product-name {
-  font-size: 0.9375rem;
+.product-full-name {
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
-.product-isin {
+.product-meta {
   font-size: 0.75rem;
   color: var(--text-dim);
   font-family: monospace;
+  margin-left: 0.5rem;
 }
+
+/* Removed old product-info styles as they are replaced by compact ones */
 
 /* Main Content Styles */
 .main-content {
@@ -131,7 +130,21 @@
   display: flex;
   flex-direction: column;
   padding: 2rem;
-  gap: 2rem;
+  gap: 1.5rem;
+}
+
+.top-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.top-section-label.estimate {
+  margin-top: 1rem;
+  color: var(--highlight);
 }
 
 .stats-container {
@@ -143,60 +156,64 @@
 .stat-card {
   background: var(--card-bg);
   backdrop-filter: blur(12px);
-  padding: 1.5rem;
-  border-radius: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   animation: fadeIn 0.5s ease-out;
+  transition: border-color 0.3s;
 }
 
-.stat-card.empty {
-  grid-column: span 3;
-  justify-content: center;
-  color: var(--text-dim);
-  font-style: italic;
+.stat-card.estimate {
+  border-left: 2px solid var(--highlight);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.stat-card.estimate:hover {
+  border-color: var(--highlight);
 }
 
 .stat-rank {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 900;
   opacity: 0.2;
 }
 
-.stat-content {
+.stat-content-compact {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem;
+  min-width: 0;
 }
 
-.stat-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.stat-product-info {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-name {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
-.stat-isin {
-  font-size: 0.75rem;
+.stat-meta {
+  font-size: 0.7rem;
   color: var(--text-dim);
   font-family: monospace;
-}
-
-.stat-symbol {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent);
+  margin-left: 0.4rem;
 }
 
 .stat-value {
   font-size: 0.875rem;
-  color: var(--text-dim);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.stat-value.highlight {
+  color: var(--highlight);
 }
 
 /* Visualizer Styles */
@@ -212,12 +229,20 @@
   gap: 2rem;
 }
 
+.cms-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+}
+
 .cms-header h2 {
   margin: 0;
   font-size: 1.25rem;
+  white-space: nowrap;
 }
+
 .cms-header p {
-  margin: 0.5rem 0 0;
+  margin: 0;
   color: var(--text-dim);
   font-size: 0.875rem;
 }
@@ -295,15 +320,16 @@
 }
 
 .legend {
-  margin-top: auto;
+  margin: -1rem 0 1rem;
 }
 
 .info-bubble {
   background: rgba(99, 102, 241, 0.1);
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   border-left: 4px solid var(--primary);
   font-size: 0.875rem;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .highlight-cols {

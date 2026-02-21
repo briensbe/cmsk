@@ -16,31 +16,49 @@
         (click)="incrementProduct(product)"
         [class.active]="lastClickedProduct?.isin === product.isin"
       >
-        <div class="product-info">
-          <span class="product-symbol">{{ product.symbol }}</span>
-          <span class="product-name">{{ product.name }}</span>
+        <div class="product-info-compact">
+          <span class="product-full-name">
+            {{ product.name }}
+            <span class="product-meta">({{ product.isin }} - {{ product.symbol }})</span>
+          </span>
         </div>
-        <span class="product-isin">{{ product.isin }}</span>
       </div>
     </div>
   </aside>
 
   <main class="main-content">
     <header>
+      <div class="top-section-label">Top 3 Réel (Nombre de clics)</div>
       <div class="stats-container">
         <div class="stat-card" *ngFor="let top of topProducts; let i = index">
           <div class="stat-rank">#{{ i + 1 }}</div>
-          <div class="stat-content">
-            <div class="stat-header">
-              <span class="stat-symbol">{{ top.product.symbol }}</span>
+          <div class="stat-content-compact">
+            <div class="stat-product-info">
               <span class="stat-name">{{ top.product.name }}</span>
+              <span class="stat-meta">({{ top.product.isin }} - {{ top.product.symbol }})</span>
             </div>
-            <span class="stat-isin">{{ top.product.isin }}</span>
             <span class="stat-value">{{ top.count }} clics</span>
           </div>
         </div>
         <div class="stat-card empty" *ngIf="topProducts.length === 0">
           Cliquez sur des produits pour voir le Top 3
+        </div>
+      </div>
+
+      <div class="top-section-label estimate">Top 3 Estimation (Score Count-Min Sketch)</div>
+      <div class="stats-container estimate">
+        <div class="stat-card estimate" *ngFor="let top of topEstimatedProducts; let i = index">
+          <div class="stat-rank">#{{ i + 1 }}</div>
+          <div class="stat-content-compact">
+            <div class="stat-product-info">
+              <span class="stat-name">{{ top.product.name }}</span>
+              <span class="stat-meta">({{ top.product.isin }} - {{ top.product.symbol }})</span>
+            </div>
+            <span class="stat-value highlight">{{ top.score }} (score)</span>
+          </div>
+        </div>
+        <div class="stat-card empty" *ngIf="topEstimatedProducts.length === 0">
+          L'estimation CMS s'affichera ici
         </div>
       </div>
     </header>
@@ -49,6 +67,16 @@
       <div class="cms-header">
         <h2>Count-Min Sketch Table ({{ cmsRows }}x{{ cmsCols }})</h2>
         <p>Visualisation des hash et incréments en temps réel</p>
+      </div>
+
+      <div class="legend" *ngIf="lastClickedProduct">
+        <div class="info-bubble">
+          Dernière action: <strong>{{ lastClickedProduct.name }}</strong> a été haché vers les
+          colonnes
+          <span class="highlight-cols">
+            {{ lastHitsDisplay }}
+          </span>
+        </div>
       </div>
 
       <div class="cms-grid">
@@ -72,16 +100,6 @@
               <span class="cell-value">{{ cell }}</span>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="legend" *ngIf="lastClickedProduct">
-        <div class="info-bubble">
-          Dernière action: <strong>{{ lastClickedProduct.name }}</strong> a été haché vers les
-          colonnes
-          <span class="highlight-cols">
-            {{ lastHitsDisplay }}
-          </span>
         </div>
       </div>
     </section>
