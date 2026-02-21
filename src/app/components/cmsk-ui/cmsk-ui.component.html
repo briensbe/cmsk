@@ -72,10 +72,9 @@
       <div class="legend" *ngIf="lastClickedProduct">
         <div class="info-bubble">
           Dernière action: <strong>{{ lastClickedProduct.name }}</strong> a été haché vers les
-          colonnes
-          <span class="highlight-cols">
-            {{ lastHitsDisplay }}
-          </span>
+          colonnes <span class="highlight-cols">{{ lastHitsDisplay }}</span
+          >. Score CMS: <span class="highlight-score">{{ lastEstimatedScore }}</span> | Clics réels:
+          <span class="highlight-real">{{ lastRealCount }}</span>
         </div>
       </div>
 

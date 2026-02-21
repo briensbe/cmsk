@@ -333,7 +333,17 @@
 }
 
 .highlight-cols {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.highlight-score {
   color: var(--highlight);
+  font-weight: bold;
+}
+
+.highlight-real {
+  color: var(--accent);
   font-weight: bold;
 }
 

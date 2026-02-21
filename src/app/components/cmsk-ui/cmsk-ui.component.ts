@@ -116,4 +116,12 @@ export class CmskUiComponent implements OnInit {
     get lastHitsDisplay(): string {
         return this.lastHits.map(h => h.col).join(', ');
     }
+
+    get lastEstimatedScore(): number {
+        return this.lastClickedProduct ? this.cms.estimate(this.lastClickedProduct.isin) : 0;
+    }
+
+    get lastRealCount(): number {
+        return this.lastClickedProduct ? (this.realCounts.get(this.lastClickedProduct.isin) || 0) : 0;
+    }
 }
