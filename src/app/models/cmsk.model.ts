@@ -1,3 +1,5 @@
+import { murmurHash128 } from '../utils/hash.utils';
+
 export class CountMinSketch {
     private table: number[][];
     private d: number; // rows
@@ -11,8 +13,10 @@ export class CountMinSketch {
 
     public increment(key: string): { row: number, col: number }[] {
         const hits: { row: number, col: number }[] = [];
+        const [h1, h2] = murmurHash128(key);
+
         for (let i = 0; i < this.d; i++) {
-            const col = this.hash(key, i);
+            const col = this.getDoubleHash(h1, h2, i);
             this.table[i][col]++;
             hits.push({ row: i, col });
         }
@@ -21,8 +25,10 @@ export class CountMinSketch {
 
     public estimate(key: string): number {
         let min = Infinity;
+        const [h1, h2] = murmurHash128(key);
+
         for (let i = 0; i < this.d; i++) {
-            const col = this.hash(key, i);
+            const col = this.getDoubleHash(h1, h2, i);
             min = Math.min(min, this.table[i][col]);
         }
         return min === Infinity ? 0 : min;
@@ -32,13 +38,9 @@ export class CountMinSketch {
         return this.table.map(row => [...row]);
     }
 
-    private hash(key: string, seed: number): number {
-        let h = 0;
-        // Simple hash function with seed to make it "different" per row
-        const str = `${key}_${seed}`;
-        for (let i = 0; i < str.length; i++) {
-            h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
-        }
-        return Math.abs(h) % this.w;
+    private getDoubleHash(h1: number, h2: number, i: number): number {
+        // Double hashing formula: (h1 + i * h2) % w
+        // h1 and h2 are already unsigned 32-bit integers from murmurHash128
+        return ((h1 + Math.imul(i, h2)) >>> 0) % this.w;
     }
 }

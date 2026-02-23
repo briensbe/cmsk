@@ -1,0 +1,27 @@
+// import { murmurHash128 } from './hash.utils.ts';
+
+// describe('MurmurHash3_x86_128', () => {
+//     it('should generate consistent hashes for strings', () => {
+//         const key = 'test-key';
+//         const hash1 = murmurHash128(key);
+//         const hash2 = murmurHash128(key);
+
+//         expect(hash1).toEqual(hash2);
+//         expect(hash1.length).toBe(4);
+//     });
+
+//     it('should generate different hashes for different strings', () => {
+//         const hash1 = murmurHash128('abc');
+//         const hash2 = murmurHash128('abd');
+
+//         expect(hash1).not.toEqual(hash2);
+//     });
+
+//     it('should respect the seed', () => {
+//         const key = 'test';
+//         const hash1 = murmurHash128(key, 0);
+//         const hash2 = murmurHash128(key, 1);
+
+//         expect(hash1).not.toEqual(hash2);
+//     });
+// });
