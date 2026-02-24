@@ -13,10 +13,10 @@ export class CountMinSketch {
 
     public increment(key: string): { row: number, col: number }[] {
         const hits: { row: number, col: number }[] = [];
-        const [h1, h2] = murmurHash128(key);
+        const hashes = murmurHash128(key);
 
         for (let i = 0; i < this.d; i++) {
-            const col = this.getDoubleHash(h1, h2, i);
+            const col = this.getHashForService(hashes, i);
             this.table[i][col]++;
             hits.push({ row: i, col });
         }
@@ -25,10 +25,10 @@ export class CountMinSketch {
 
     public estimate(key: string): number {
         let min = Infinity;
-        const [h1, h2] = murmurHash128(key);
+        const hashes = murmurHash128(key);
 
         for (let i = 0; i < this.d; i++) {
-            const col = this.getDoubleHash(h1, h2, i);
+            const col = this.getHashForService(hashes, i);
             min = Math.min(min, this.table[i][col]);
         }
         return min === Infinity ? 0 : min;
@@ -38,9 +38,15 @@ export class CountMinSketch {
         return this.table.map(row => [...row]);
     }
 
-    private getDoubleHash(h1: number, h2: number, i: number): number {
-        // Double hashing formula: (h1 + i * h2) % w
-        // h1 and h2 are already unsigned 32-bit integers from murmurHash128
-        return ((h1 + Math.imul(i, h2)) >>> 0) % this.w;
+    private getHashForService(hashes: Uint32Array, i: number): number {
+        // Use different combinations of the 4 32-bit words from MurmurHash3
+        // to minimize collision propagation across rows.
+        // Formula: (h1 + i * h2 + i*i * h3) % w
+        const h1 = hashes[0];
+        const h2 = hashes[1];
+        const h3 = hashes[2];
+
+        const hash = (h1 + Math.imul(i, h2) + Math.imul(Math.imul(i, i), h3)) >>> 0;
+        return hash % this.w;
     }
 }

@@ -16,7 +16,7 @@ export class CmskUiComponent implements OnInit {
     filteredProducts: Product[] = CAC40_PRODUCTS;
 
     cmsRows = 4;
-    cmsCols = 13; // nb premier ou puissance de deux 
+    cmsCols = 16; // nb premier ou puissance de deux 
     cms = new CountMinSketch(this.cmsRows, this.cmsCols);
     cmsTable: number[][] = [];
 
