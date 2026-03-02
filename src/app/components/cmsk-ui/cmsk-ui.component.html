@@ -10,6 +10,31 @@
     </div>
 
     <div class="simulation-section">
+      <h3>Configuration CMS</h3>
+      <div class="config-group">
+        <label>Lignes (Hash)</label>
+        <div class="config-controls">
+          <input type="range" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
+          <input type="number" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
+        </div>
+      </div>
+      <div class="config-group">
+        <label>Colonnes (Slots)</label>
+        <div class="config-controls">
+          <input
+            type="range"
+            min="16"
+            max="256"
+            step="16"
+            [value]="cmsCols"
+            (input)="updateCols($event)"
+          />
+          <input type="number" min="16" max="256" [value]="cmsCols" (input)="updateCols($event)" />
+        </div>
+      </div>
+    </div>
+
+    <div class="simulation-section">
       <h3>Simulation Aléatoire</h3>
       <div class="simulation-buttons">
         <button (click)="runSimulation(10)">10</button>

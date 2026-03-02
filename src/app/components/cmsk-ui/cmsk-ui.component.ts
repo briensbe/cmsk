@@ -157,4 +157,31 @@ export class CmskUiComponent implements OnInit {
             .sort((a, b) => b.score - a.score)
             .slice(0, 3);
     }
+
+    updateRows(event: Event) {
+        const value = parseInt((event.target as HTMLInputElement).value, 10);
+        if (value >= 3 && value <= 7) {
+            this.cmsRows = value;
+            this.resetCms();
+        }
+    }
+
+    updateCols(event: Event) {
+        const value = parseInt((event.target as HTMLInputElement).value, 10);
+        if (value >= 16 && value <= 256) {
+            this.cmsCols = value;
+            this.resetCms();
+        }
+    }
+
+    private resetCms() {
+        this.cms = new CountMinSketch(this.cmsRows, this.cmsCols);
+        this.realCounts.clear();
+        this.topProducts = [];
+        this.topEstimatedProducts = [];
+        this.lastClickedProduct = null;
+        this.lastHits = [];
+        this.activeHits = [];
+        this.refreshTable();
+    }
 }
