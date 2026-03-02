@@ -28,6 +28,9 @@ export class CmskUiComponent implements OnInit {
     lastHits: { row: number, col: number }[] = [];
     activeHits: { row: number, col: number }[] = [];
 
+    showDeltaInfo = false;
+    showEpsilonInfo = false;
+
     ngOnInit() {
         this.refreshTable();
     }
@@ -183,5 +186,35 @@ export class CmskUiComponent implements OnInit {
         this.lastHits = [];
         this.activeHits = [];
         this.refreshTable();
+    }
+
+    toggleDeltaInfo() {
+        this.showDeltaInfo = !this.showDeltaInfo;
+    }
+
+    get delta(): number {
+        // k = ln(1/delta) => 1/delta = e^k => delta = e^-k
+        return Math.exp(-this.cmsRows);
+    }
+
+    get confidence(): number {
+        return (1 - this.delta) * 100;
+    }
+
+    toggleEpsilonInfo() {
+        this.showEpsilonInfo = !this.showEpsilonInfo;
+    }
+
+    get totalClicks(): number {
+        return Array.from(this.realCounts.values()).reduce((sum, count) => sum + count, 0);
+    }
+
+    get epsilon(): number {
+        // epsilon = e / w
+        return 2.718 / this.cmsCols;
+    }
+
+    get maxErrorClicks(): number {
+        return this.epsilon * this.totalClicks;
     }
 }

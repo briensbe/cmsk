@@ -12,14 +12,28 @@
     <div class="simulation-section">
       <h3>Configuration CMS</h3>
       <div class="config-group">
-        <label>Lignes (Hash)</label>
+        <label>
+          Lignes (Hash)
+          <span class="info-icon" (click)="toggleDeltaInfo()">ⓘ</span>
+        </label>
         <div class="config-controls">
           <input type="range" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
           <input type="number" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
         </div>
+        <div class="delta-info" *ngIf="showDeltaInfo">
+          <p>
+            delta ~ <strong>{{ delta | number: '1.4-4' }}</strong>
+          </p>
+          <p>
+            Confiance : <strong>{{ confidence | number: '1.2-2' }}%</strong>
+          </p>
+        </div>
       </div>
       <div class="config-group">
-        <label>Colonnes (Slots)</label>
+        <label>
+          Colonnes (Slots)
+          <span class="info-icon" (click)="toggleEpsilonInfo()">ⓘ</span>
+        </label>
         <div class="config-controls">
           <input
             type="range"
@@ -30,6 +44,16 @@
             (input)="updateCols($event)"
           />
           <input type="number" min="16" max="256" [value]="cmsCols" (input)="updateCols($event)" />
+        </div>
+        <div class="delta-info" *ngIf="showEpsilonInfo">
+          <p>
+            epsilon = e/w ~ <strong>{{ epsilon | number: '1.4-4' }}</strong> (avec nombre d'Euler e
+            ~ 2.718)
+          </p>
+          <p>
+            Erreur estimée : <strong>{{ maxErrorClicks | number: '1.1-1' }}</strong> clics (sur
+            {{ totalClicks }} total)
+          </p>
         </div>
       </div>
     </div>
