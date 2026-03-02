@@ -9,6 +9,15 @@
       <input type="text" placeholder="Rechercher un produit..." (input)="filterProducts($event)" />
     </div>
 
+    <div class="simulation-section">
+      <h3>Simulation Aléatoire</h3>
+      <div class="simulation-buttons">
+        <button (click)="runSimulation(10)">10</button>
+        <button (click)="runSimulation(100)">100</button>
+        <button (click)="runSimulation(1000)">1000</button>
+      </div>
+    </div>
+
     <div class="product-list">
       <div
         *ngFor="let product of filteredProducts"

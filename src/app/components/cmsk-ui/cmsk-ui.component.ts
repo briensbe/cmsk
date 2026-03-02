@@ -16,7 +16,7 @@ export class CmskUiComponent implements OnInit {
     filteredProducts: Product[] = CAC40_PRODUCTS;
 
     cmsRows = 4;
-    cmsCols = 16; // nb premier ou puissance de deux 
+    cmsCols = 32; // nb premier ou puissance de deux 
     cms = new CountMinSketch(this.cmsRows, this.cmsCols);
     cmsTable: number[][] = [];
 
@@ -43,26 +43,7 @@ export class CmskUiComponent implements OnInit {
 
     incrementProduct(product: Product) {
         this.lastClickedProduct = product;
-
-        // Increment in CMS
-        const hits = this.cms.increment(product.isin);
-        this.lastHits = hits;
-        this.activeHits = hits;
-
-        // Update real counts for Top 3
-        const currentCount = (this.realCounts.get(product.isin) || 0) + 1;
-        this.realCounts.set(product.isin, currentCount);
-
-        this.updateTop3();
-        this.updateEstimatedTop3(product);
-        this.refreshTable();
-
-        // Remove active state after animation
-        setTimeout(() => {
-            this.activeHits = [];
-            // Note: In OnPush, we might need markForCheck if this was asynchronous outside of NgZone,
-            // but here we are in Angular event handlers.
-        }, 500);
+        this.internalIncrement(product, true);
     }
 
     updateTop3() {
@@ -123,5 +104,57 @@ export class CmskUiComponent implements OnInit {
 
     get lastRealCount(): number {
         return this.lastClickedProduct ? (this.realCounts.get(this.lastClickedProduct.isin) || 0) : 0;
+    }
+
+    runSimulation(iterations: number) {
+        this.lastClickedProduct = null;
+        this.lastHits = [];
+        this.activeHits = [];
+
+        for (let i = 0; i < iterations; i++) {
+            const randomProduct = this.products[Math.floor(Math.random() * this.products.length)];
+            this.internalIncrement(randomProduct, false);
+        }
+
+        this.updateTop3();
+        // For the estimated top 3, we need to refresh based on actual CMS state for all products
+        // because we don't have a single "currentProduct" for the whole simulation.
+        this.refreshEstimatedTop3();
+        this.refreshTable();
+    }
+
+    private internalIncrement(product: Product, updateUI: boolean) {
+        // Increment in CMS
+        const hits = this.cms.increment(product.isin);
+
+        if (updateUI) {
+            this.lastHits = hits;
+            this.activeHits = hits;
+        }
+
+        // Update real counts
+        const currentCount = (this.realCounts.get(product.isin) || 0) + 1;
+        this.realCounts.set(product.isin, currentCount);
+
+        if (updateUI) {
+            this.updateTop3();
+            this.updateEstimatedTop3(product);
+            this.refreshTable();
+
+            setTimeout(() => {
+                this.activeHits = [];
+            }, 500);
+        }
+    }
+
+    private refreshEstimatedTop3() {
+        const scores = this.products.map(p => ({
+            product: p,
+            score: this.cms.estimate(p.isin)
+        }));
+
+        this.topEstimatedProducts = scores
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3);
     }
 }
