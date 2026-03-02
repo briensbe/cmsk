@@ -9,76 +9,84 @@
       <input type="text" placeholder="Rechercher un produit..." (input)="filterProducts($event)" />
     </div>
 
-    <div class="simulation-section">
-      <h3>Configuration CMS</h3>
-      <div class="config-group">
-        <label>
-          Lignes (Hash)
-          <span class="info-icon" (click)="toggleDeltaInfo()">ⓘ</span>
-        </label>
-        <div class="config-controls">
-          <input type="range" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
-          <input type="number" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
+    <div class="sidebar-content">
+      <div class="simulation-section">
+        <h3>Configuration CMS</h3>
+        <div class="config-group">
+          <label>
+            Lignes (Hash)
+            <span class="info-icon" (click)="toggleDeltaInfo()">ⓘ</span>
+          </label>
+          <div class="config-controls">
+            <input type="range" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
+            <input type="number" min="3" max="7" [value]="cmsRows" (input)="updateRows($event)" />
+          </div>
+          <div class="delta-info" *ngIf="showDeltaInfo">
+            <p>
+              delta ~ <strong>{{ delta | number: '1.4-4' }}</strong>
+            </p>
+            <p>
+              Confiance : <strong>{{ confidence | number: '1.2-2' }}%</strong>
+            </p>
+          </div>
         </div>
-        <div class="delta-info" *ngIf="showDeltaInfo">
-          <p>
-            delta ~ <strong>{{ delta | number: '1.4-4' }}</strong>
-          </p>
-          <p>
-            Confiance : <strong>{{ confidence | number: '1.2-2' }}%</strong>
-          </p>
+        <div class="config-group">
+          <label>
+            Colonnes (Slots)
+            <span class="info-icon" (click)="toggleEpsilonInfo()">ⓘ</span>
+          </label>
+          <div class="config-controls">
+            <input
+              type="range"
+              min="16"
+              max="256"
+              step="16"
+              [value]="cmsCols"
+              (input)="updateCols($event)"
+            />
+            <input
+              type="number"
+              min="16"
+              max="256"
+              [value]="cmsCols"
+              (input)="updateCols($event)"
+            />
+          </div>
+          <div class="delta-info" *ngIf="showEpsilonInfo">
+            <p>
+              epsilon = e/w ~ <strong>{{ epsilon | number: '1.4-4' }}</strong> (avec nombre d'Euler
+              e ~ 2.718)
+            </p>
+            <p>
+              Erreur estimée : <strong>{{ maxErrorClicks | number: '1.1-1' }}</strong> clics (sur
+              {{ totalClicks }} total)
+            </p>
+          </div>
         </div>
       </div>
-      <div class="config-group">
-        <label>
-          Colonnes (Slots)
-          <span class="info-icon" (click)="toggleEpsilonInfo()">ⓘ</span>
-        </label>
-        <div class="config-controls">
-          <input
-            type="range"
-            min="16"
-            max="256"
-            step="16"
-            [value]="cmsCols"
-            (input)="updateCols($event)"
-          />
-          <input type="number" min="16" max="256" [value]="cmsCols" (input)="updateCols($event)" />
-        </div>
-        <div class="delta-info" *ngIf="showEpsilonInfo">
-          <p>
-            epsilon = e/w ~ <strong>{{ epsilon | number: '1.4-4' }}</strong> (avec nombre d'Euler e
-            ~ 2.718)
-          </p>
-          <p>
-            Erreur estimée : <strong>{{ maxErrorClicks | number: '1.1-1' }}</strong> clics (sur
-            {{ totalClicks }} total)
-          </p>
-        </div>
-      </div>
-    </div>
 
-    <div class="simulation-section">
-      <h3>Simulation Aléatoire</h3>
-      <div class="simulation-buttons">
-        <button (click)="runSimulation(10)">10</button>
-        <button (click)="runSimulation(100)">100</button>
-        <button (click)="runSimulation(1000)">1000</button>
+      <div class="simulation-section">
+        <h3>Simulation Aléatoire</h3>
+        <div class="simulation-buttons">
+          <button (click)="runSimulation(10)">10</button>
+          <button (click)="runSimulation(100)">100</button>
+          <button (click)="runSimulation(1000)">1000</button>
+        </div>
       </div>
-    </div>
 
-    <div class="product-list">
-      <div
-        *ngFor="let product of filteredProducts"
-        class="product-item"
-        (click)="incrementProduct(product)"
-        [class.active]="lastClickedProduct?.isin === product.isin"
-      >
-        <div class="product-info-compact">
-          <span class="product-full-name">
-            {{ product.name }}
-            <span class="product-meta">({{ product.isin }} - {{ product.symbol }})</span>
-          </span>
+      <div class="product-list">
+        <div
+          *ngFor="let product of filteredProducts"
+          class="product-item"
+          (click)="incrementProduct(product)"
+          [class.active]="lastClickedProduct?.isin === product.isin"
+        >
+          <div class="product-info-compact">
+            <span class="product-full-name">
+              {{ product.name }}
+              <span class="product-meta">({{ product.isin }} - {{ product.symbol }})</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
